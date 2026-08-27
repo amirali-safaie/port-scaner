@@ -15,7 +15,7 @@ func TestDec2Bi(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		got, err := Dec2bi(test.num)
+		got, err := Dec2Bi(test.num)
 		if err != nil{
 			t.Errorf("faild!")
 		}
@@ -24,4 +24,16 @@ func TestDec2Bi(t *testing.T) {
 		}
 	}
 
+}
+
+
+func TestBi2Dec(t *testing.T){
+	got, err := Bi2Dec("101")
+	expect := 5
+	if err != nil {
+		t.Errorf("faild to run")
+	}
+	if got != expect {
+		t.Errorf("expected %d but got %d",expect, got)
+	}
 }
