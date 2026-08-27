@@ -6,7 +6,7 @@ import (
 )
 
 
-func dec2bi(num int) (string, error) {
+func Dec2bi(num int) (string, error) {
 	if num < 0{
 		return "", errors.New("Negative number is not allowed")
 	}
