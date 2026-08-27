@@ -37,3 +37,27 @@ func TestBi2Dec(t *testing.T){
 		t.Errorf("expected %d but got %d",expect, got)
 	}
 }
+
+func TestAdd2Ipv4(t *testing.T) {
+	tests := []struct {
+		ip       string
+		expected string
+		wantErr  bool
+	}{
+		{"0.0.0.0", "0.0.0.1", false},
+		{"192.168.1.1", "192.168.1.2", false},
+		{"192.168.1.255", "192.168.2.0", false},
+		{"192.168.255.255", "192.169.0.0", false},
+		{"255.255.255.255", "", true},
+	}
+
+	for _, test := range tests {
+		got, err := Add2Ipv4(test.ip)
+		if (err != nil) != test.wantErr {
+			t.Errorf("Add2Ipv4(%s) error = %v; wantErr %v", test.ip, err, test.wantErr)
+		}
+		if !test.wantErr && got != test.expected {
+			t.Errorf("Add2Ipv4(%s) = %s; expected %s", test.ip, got, test.expected)
+		}
+	}
+}
