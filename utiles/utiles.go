@@ -150,3 +150,67 @@ func baseIp(ip string) (string, error) {
 
 	return  strings.Join(result,"."), nil
 }
+
+//endIp will get the ip and according to its mask will return end ip
+func endIp(ip string) (string, error) {
+	if !strings.Contains(ip, "/") {
+		return  "",errors.New("invalid ip format, it sould be CIDR")
+	}
+	parts := strings.Split(ip, "/")
+	if prefix, _ := strconv.Atoi(parts[1]); prefix > 32 || prefix < 0 {
+		return "",errors.New("invalid ip format, prefix should be less than 24")
+	}
+
+
+	fmt.Printf("dec ip is : %s",parts[0])
+	fmt.Println()
+
+
+	ipPart := strings.Split(parts[0], ".")
+	mask,_ := subnetMask(ip)
+	fmt.Printf("mask is : %s",mask)
+	fmt.Println()
+
+	for index,ip := range ipPart {
+		intIp,_ := strconv.Atoi(ip)
+		ipPart[index],_ = Dec2Bi(intIp)
+	}
+
+	
+	
+	biIp := strings.Join(ipPart,"")
+	fmt.Printf("ip banary is : %s",biIp)
+	fmt.Println()
+	mask = strings.ReplaceAll(mask,".","")
+	mask = not(mask)
+	tempResult := ""
+	result := []string{}
+	for i := range biIp { 	
+		if biIp[i] == '1' || mask[i] == '1' {
+			tempResult += "1"
+		} else {
+			tempResult += "0"
+		}
+		if (i+1)%8 == 0 {
+			temp, _ := Bi2Dec(tempResult)
+			strTemp := strconv.Itoa(temp)
+			result = append(result, strTemp)
+			tempResult = ""
+		}
+	}
+
+
+	return  strings.Join(result,"."), nil
+}
+
+func not(bi string) string {
+	result := []string{}
+	for _, bit := range bi{
+		if string(bit) == "0"{
+			result = append(result, "1")
+		}else{
+			result = append(result, "0")
+		}
+	}
+	return  strings.Join(result, "")
+}

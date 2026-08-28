@@ -164,3 +164,64 @@ func TestBaseIp(t *testing.T) {
 		})
 	}
 }
+
+
+
+func TestEndIp(t *testing.T) {
+	tests := []struct {
+		name string
+		ip   string
+		want string
+	}{
+		{
+			name: "192.168.0.1/23",
+			ip:   "192.168.0.1/23",
+			want: "192.168.1.255",
+		},
+		{
+			name: "192.168.1.100/24",
+			ip:   "192.168.1.100/24",
+			want: "192.168.1.255",
+		},
+		{
+			name: "10.20.30.40/16",
+			ip:   "10.20.30.40/16",
+			want: "10.20.255.255",
+		},
+		{
+			name: "172.16.50.100/8",
+			ip:   "172.16.50.100/8",
+			want: "172.255.255.255",
+		},
+		{
+			name: "already end IP",
+			ip:   "192.168.10.255/24",
+			want: "192.168.10.255",
+		},
+		{
+			name: "10.0.0.1/30",
+			ip:   "10.0.0.3/30",
+			want: "10.0.0.3",
+		},
+		{
+			name: "10.0.0.1/32",
+			ip:   "10.0.0.1/32",
+			want: "10.0.0.1",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := endIp(tt.ip)
+
+			if err != nil {
+				t.Fatalf("endIp(%q) returned unexpected error: %v", tt.ip, err)
+			}
+
+			if got != tt.want {
+				t.Errorf("endIp(%q) = %q, want %q", tt.ip, got, tt.want)
+			}
+		})
+	}
+}
+
