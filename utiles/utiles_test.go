@@ -9,10 +9,10 @@ func TestDec2Bi(t *testing.T) {
 		num int
 		expected string
 	}{
-		{10, "1010"},
-		{0, ""},
-		{5, "101"},
-		{15, "1111"},
+		{10, "00001010"},
+		{0, "00000000"},
+		{5, "00000101"},
+		{15, "00001111"},
 	}
 
 	for _, test := range tests {
@@ -115,5 +115,52 @@ func TestSubnetMask(t *testing.T) {
 }
 
 
-// "11111111.11111111.11111111.11111110.00000000", 
-// want "11111111.11111111.11111110.00000000"
+
+
+func TestBaseIp(t *testing.T) {
+	tests := []struct {
+		name string
+		ip   string
+		want string
+	}{
+		{
+			name: "192.168.0.1/23",
+			ip:   "192.168.0.1/23",
+			want: "192.168.0.0",
+		},
+		{
+			name: "192.168.1.100/24",
+			ip:   "192.168.1.100/24",
+			want: "192.168.1.0",
+		},
+		{
+			name: "10.20.30.40/16",
+			ip:   "10.20.30.40/16",
+			want: "10.20.0.0",
+		},
+		{
+			name: "172.16.50.100/8",
+			ip:   "172.16.50.100/8",
+			want: "172.0.0.0",
+		},
+		{
+			name: "already base IP",
+			ip:   "192.168.10.0/24",
+			want: "192.168.10.0",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := baseIp(tt.ip)
+
+			if err != nil {
+				t.Fatalf("baseIp(%q) returned unexpected error: %v", tt.ip, err)
+			}
+
+			if got != tt.want {
+				t.Errorf("baseIp(%q) = %q, want %q", tt.ip, got, tt.want)
+			}
+		})
+	}
+}

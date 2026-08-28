@@ -1,9 +1,10 @@
 package utiles
 
 import (
-	"strconv"
 	"errors"
+	"fmt"
 	"math"
+	"strconv"
 	"strings"
 )
 
@@ -20,6 +21,9 @@ func Dec2Bi(num int) (string, error) {
 		num = num/2
 	}
 
+	for len(binary) < 8 {
+		binary = "0"+binary
+	}
 	return binary, nil
 }	
 
@@ -105,12 +109,44 @@ func baseIp(ip string) (string, error) {
 		return "",errors.New("invalid ip format, prefix should be less than 24")
 	}
 
-	ipPart := parts[0]
+
+	fmt.Printf("dec ip is : %s",parts[0])
+	fmt.Println()
+
+
+	ipPart := strings.Split(parts[0], ".")
 	mask,_ := subnetMask(ip)
+	fmt.Printf("mask is : %s",mask)
+	fmt.Println()
 
-	for ip := ran
+	for index,ip := range ipPart {
+		intIp,_ := strconv.Atoi(ip)
+		ipPart[index],_ = Dec2Bi(intIp)
+	}
 
-	ipPart = strings.ReplaceAll(ipPart,".","")
+	
+	
+	biIp := strings.Join(ipPart,"")
+	fmt.Printf("ip banary is : %s",biIp)
+	fmt.Println()
 	mask = strings.ReplaceAll(mask,".","")
 
+	tempResult := ""
+	result := []string{}
+	for i := range biIp { 	
+		if biIp[i] == '1' && mask[i] == '1' {
+			tempResult += "1"
+		} else {
+			tempResult += "0"
+		}
+		if (i+1)%8 == 0 {
+			temp, _ := Bi2Dec(tempResult)
+			strTemp := strconv.Itoa(temp)
+			result = append(result, strTemp)
+			tempResult = ""
+		}
+	}
+
+
+	return  strings.Join(result,"."), nil
 }
