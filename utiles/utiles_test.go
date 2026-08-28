@@ -1,4 +1,5 @@
 package utiles
+
 import (
 	"testing"
 )
@@ -61,3 +62,58 @@ func TestAdd2Ipv4(t *testing.T) {
 		}
 	}
 }
+
+
+
+
+func TestSubnetMask(t *testing.T) {
+	tests := []struct {
+		name    string
+		ip      string
+		want    string
+		wantErr bool
+	}{
+		{
+			name:    "CIDR /23",
+			ip:      "192.168.0.1/23",
+			want:    "11111111.11111111.11111110.00000000",
+			wantErr: false,
+		},
+		{
+			name:    "CIDR /24",
+			ip:      "192.168.1.10/24",
+			want:    "11111111.11111111.11111111.00000000",
+			wantErr: false,
+		},
+		{
+			name:    "CIDR /8",
+			ip:      "10.0.0.1/8",
+			want:    "11111111.00000000.00000000.00000000",
+			wantErr: false,
+		},
+		{
+			name:    "missing CIDR prefix",
+			ip:      "192.168.1.1",
+			want:    "",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := subnetMask(tt.ip)
+
+			if (err != nil) != tt.wantErr {
+				t.Fatalf("SubnetMask() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			if got != tt.want {
+				t.Errorf("ip = %s SubnetMask() = %q, want %q",tt.ip, got, tt.want)
+			}
+		})
+	}
+}
+
+
+// "11111111.11111111.11111111.11111110.00000000", 
+// want "11111111.11111111.11111110.00000000"
