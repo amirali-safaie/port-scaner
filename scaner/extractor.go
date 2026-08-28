@@ -1,27 +1,36 @@
 package scaner
 
 import (
-	"fmt"
-	"strconv"
 	"strings"
+	"port-scaner/utiles"
 )
 
 
 func ListHosts(target string) ([]string,error) {
 	contain := strings.Contains(target,"/")
 	if contain {
-		return nil,nil
+		lst, err := extractSubHosts(target)
+		if err != nil {
+			return  []string{}, err
+		}else{
+			return  lst, nil
+		}
 	}else{
 		return []string{target},nil
 	}
 }
 
 func extractSubHosts(target string) ([]string,error) {
-	splitedTarget := strings.Split(target, "/")
-	CIDR, _ := strconv.Atoi(splitedTarget[1]) 
-	unChaingeAblePart := 4 - CIDR/8
-	IpParts := strings.Split(splitedTarget[0], ".")
-	baseIp := strings.Join(IpParts[:unChaingeAblePart], ".")
-	
-
+	hostList := []string{}
+	baseIp, err := utiles.BaseIp(target)
+	if err != nil {
+		return  hostList,err
+	}
+	endIp, err := utiles.EndIp(target)
+	ip, err := utiles.Add2Ipv4(baseIp)
+	for ip != endIp {
+		hostList = append(hostList, ip)
+		ip,_ = utiles.Add2Ipv4(ip)
+	}
+	return  hostList, nil
 }

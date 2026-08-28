@@ -2,7 +2,6 @@ package utiles
 
 import (
 	"errors"
-	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -100,7 +99,7 @@ func subnetMask(ip string) (string, error) {
 
 
 //baseIp will get the ip and according to its mask will return base ip
-func baseIp(ip string) (string, error) {
+func BaseIp(ip string) (string, error) {
 	if !strings.Contains(ip, "/") {
 		return  "",errors.New("invalid ip format, it sould be CIDR")
 	}
@@ -108,16 +107,8 @@ func baseIp(ip string) (string, error) {
 	if prefix, _ := strconv.Atoi(parts[1]); prefix > 32 || prefix < 0 {
 		return "",errors.New("invalid ip format, prefix should be less than 24")
 	}
-
-
-	fmt.Printf("dec ip is : %s",parts[0])
-	fmt.Println()
-
-
 	ipPart := strings.Split(parts[0], ".")
 	mask,_ := subnetMask(ip)
-	fmt.Printf("mask is : %s",mask)
-	fmt.Println()
 
 	for index,ip := range ipPart {
 		intIp,_ := strconv.Atoi(ip)
@@ -127,8 +118,6 @@ func baseIp(ip string) (string, error) {
 	
 	
 	biIp := strings.Join(ipPart,"")
-	fmt.Printf("ip banary is : %s",biIp)
-	fmt.Println()
 	mask = strings.ReplaceAll(mask,".","")
 
 	tempResult := ""
@@ -152,7 +141,7 @@ func baseIp(ip string) (string, error) {
 }
 
 //endIp will get the ip and according to its mask will return end ip
-func endIp(ip string) (string, error) {
+func EndIp(ip string) (string, error) {
 	if !strings.Contains(ip, "/") {
 		return  "",errors.New("invalid ip format, it sould be CIDR")
 	}
@@ -162,14 +151,9 @@ func endIp(ip string) (string, error) {
 	}
 
 
-	fmt.Printf("dec ip is : %s",parts[0])
-	fmt.Println()
-
-
 	ipPart := strings.Split(parts[0], ".")
 	mask,_ := subnetMask(ip)
-	fmt.Printf("mask is : %s",mask)
-	fmt.Println()
+
 
 	for index,ip := range ipPart {
 		intIp,_ := strconv.Atoi(ip)
@@ -179,8 +163,6 @@ func endIp(ip string) (string, error) {
 	
 	
 	biIp := strings.Join(ipPart,"")
-	fmt.Printf("ip banary is : %s",biIp)
-	fmt.Println()
 	mask = strings.ReplaceAll(mask,".","")
 	mask = not(mask)
 	tempResult := ""
