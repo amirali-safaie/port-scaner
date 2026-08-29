@@ -39,6 +39,54 @@ func TestBi2Dec(t *testing.T){
 	}
 }
 
+func TestIp2Bi(t *testing.T) {
+	tests := []struct {
+		ip       string
+		expected string
+		wantErr  bool
+	}{
+		{"192.168.1.1", "11000000101010000000000100000001", false},
+		{"0.0.0.0", "00000000000000000000000000000000", false},
+		{"255.255.255.255", "11111111111111111111111111111111", false},
+		{"192.168.0.1", "11000000101010000000000000000001", false},
+		{"0.0.0.1","00000000000000000000000000000001",false},
+	}
+
+	for _, test := range tests {
+		got, err := Ip2Bi(test.ip)
+		if (err != nil) != test.wantErr {
+			t.Errorf("Ip2Bi(%s) error = %v; wantErr %v", test.ip, err, test.wantErr)
+		}
+		if !test.wantErr && got != test.expected {
+			t.Errorf("Ip2Bi(%s) = %s; expected %s", test.ip, got, test.expected)
+		}
+	}
+}
+
+func TestIp2Int(t *testing.T) {
+	tests := []struct {
+		ip       string
+		expected int
+		wantErr  bool
+	}{
+		{"0.0.0.0", 0, false},
+		{"0.0.0.5", 5, false},
+		{"0.0.0.1", 1, false},
+		{"192.168.1.1", 3232235777, false},
+		{"255.255.255.255", 4294967295, false},
+	}
+
+	for _, test := range tests {
+		got, err := Ip2Int(test.ip)
+		if (err != nil) != test.wantErr {
+			t.Errorf("Ip2Int(%s) error = %v; wantErr %v", test.ip, err, test.wantErr)
+		}
+		if !test.wantErr && got != test.expected {
+			t.Errorf("Ip2Int(%s) = %d; expected %d", test.ip, got, test.expected)
+		}
+	}
+}
+
 func TestAdd2Ipv4(t *testing.T) {
 	tests := []struct {
 		ip       string

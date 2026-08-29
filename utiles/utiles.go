@@ -196,3 +196,28 @@ func not(bi string) string {
 	}
 	return  strings.Join(result, "")
 }
+
+
+//Ip2Int will convert ip into int (unit32 number)
+func Ip2Bi(ip string) (string, error) {
+	ipParts := strings.Split(ip, ".")
+	biIp := ""
+	for _,part := range ipParts {
+		intPart,_ := strconv.Atoi(part)
+		bi,_ := Dec2Bi(intPart)
+		biIp += bi
+	}
+	return  biIp, nil
+}
+
+func Ip2Int(ip string) (int, error) {
+	biIp,err := Ip2Bi(ip)
+	if err != nil {
+		return  0, err
+	}
+	intIp,_ := Bi2Dec(biIp)
+	return  intIp,nil
+}
+
+
+
