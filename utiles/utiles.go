@@ -198,7 +198,7 @@ func not(bi string) string {
 }
 
 
-//Ip2Int will convert ip into int (unit32 number)
+//Ip2Bi will convert ip into binary 
 func Ip2Bi(ip string) (string, error) {
 	ipParts := strings.Split(ip, ".")
 	biIp := ""

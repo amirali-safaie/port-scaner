@@ -22,15 +22,15 @@ func ListHosts(target string) ([]string,error) {
 
 func extractSubHosts(target string) ([]string,error) {
 	hostList := []string{}
-	baseIp, err := utiles.BaseIp(target)
-	if err != nil {
-		return  hostList,err
-	}
-	endIp, err := utiles.EndIp(target)
-	ip, err := utiles.Add2Ipv4(baseIp)
-	for ip != endIp {
+	baseIp, _ := utiles.BaseIp(target)
+	endIp, _ := utiles.EndIp(target)
+	intEndIp, _ := utiles.Ip2Int(endIp)
+	intIp, _  := utiles.Ip2Int(baseIp)
+	intIp++
+	for intIp != intEndIp {
+		ip,_ := utiles.Int2Ip(intIp)
 		hostList = append(hostList, ip)
-		ip,_ = utiles.Add2Ipv4(ip)
-	}
+		intIp++
+	} 
 	return  hostList, nil
 }
