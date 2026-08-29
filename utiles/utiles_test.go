@@ -292,7 +292,7 @@ func TestEndIp(t *testing.T) {
 
 func TestInt2Ip(t *testing.T) {
 	tests := []struct {
-		num       int
+		num      int
 		expected string
 		wantErr  bool
 	}{
