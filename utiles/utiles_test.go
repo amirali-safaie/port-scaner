@@ -6,7 +6,7 @@ import (
 
 func TestDec2Bi(t *testing.T) {
 	tests := []struct {
-		num int
+		num      int
 		expected string
 	}{
 		{10, "00001010"},
@@ -17,7 +17,7 @@ func TestDec2Bi(t *testing.T) {
 
 	for _, test := range tests {
 		got, err := Dec2Bi(test.num)
-		if err != nil{
+		if err != nil {
 			t.Errorf("faild!")
 		}
 		if got != test.expected {
@@ -27,15 +27,14 @@ func TestDec2Bi(t *testing.T) {
 
 }
 
-
-func TestBi2Dec(t *testing.T){
+func TestBi2Dec(t *testing.T) {
 	got, err := Bi2Dec("101")
 	expect := 5
 	if err != nil {
 		t.Errorf("faild to run")
 	}
 	if got != expect {
-		t.Errorf("expected %d but got %d",expect, got)
+		t.Errorf("expected %d but got %d", expect, got)
 	}
 }
 
@@ -49,7 +48,7 @@ func TestIp2Bi(t *testing.T) {
 		{"0.0.0.0", "00000000000000000000000000000000", false},
 		{"255.255.255.255", "11111111111111111111111111111111", false},
 		{"192.168.0.1", "11000000101010000000000000000001", false},
-		{"0.0.0.1","00000000000000000000000000000001",false},
+		{"0.0.0.1", "00000000000000000000000000000001", false},
 	}
 
 	for _, test := range tests {
@@ -87,6 +86,32 @@ func TestIp2Int(t *testing.T) {
 	}
 }
 
+func TestBi2Ip(t *testing.T) {
+	tests := []struct {
+		bi       string
+		expected string
+		wantErr  bool
+	}{
+		{"11000000101010000000000100000001", "192.168.1.1", false},
+		{"00000000000000000000000000000000", "0.0.0.0", false},
+		{"11111111111111111111111111111111", "255.255.255.255", false},
+		{"00000000000000000000000000000001", "0.0.0.1", false},
+		{"00000000000000000000000000000101", "0.0.0.5", false},
+	}
+
+	for _, test := range tests {
+		got, err := bi2Ip(test.bi)
+		if (err != nil) != test.wantErr {
+			t.Errorf("bi2Ip(%s) error = %v; wantErr %v", test.bi, err, test.wantErr)
+		}
+		if !test.wantErr {
+			if got != test.expected {
+				t.Errorf("bi2Ip(%s) = %s; expected %s", test.bi, got, test.expected)
+			}
+		}
+	}
+}
+
 func TestAdd2Ipv4(t *testing.T) {
 	tests := []struct {
 		ip       string
@@ -110,9 +135,6 @@ func TestAdd2Ipv4(t *testing.T) {
 		}
 	}
 }
-
-
-
 
 func TestSubnetMask(t *testing.T) {
 	tests := []struct {
@@ -156,14 +178,11 @@ func TestSubnetMask(t *testing.T) {
 			}
 
 			if got != tt.want {
-				t.Errorf("ip = %s SubnetMask() = %q, want %q",tt.ip, got, tt.want)
+				t.Errorf("ip = %s SubnetMask() = %q, want %q", tt.ip, got, tt.want)
 			}
 		})
 	}
 }
-
-
-
 
 func TestBaseIp(t *testing.T) {
 	tests := []struct {
@@ -212,8 +231,6 @@ func TestBaseIp(t *testing.T) {
 		})
 	}
 }
-
-
 
 func TestEndIp(t *testing.T) {
 	tests := []struct {
@@ -272,4 +289,3 @@ func TestEndIp(t *testing.T) {
 		})
 	}
 }
-

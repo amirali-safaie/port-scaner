@@ -210,6 +210,22 @@ func Ip2Bi(ip string) (string, error) {
 	return  biIp, nil
 }
 
+func bi2Ip(bi string) (string, error) {
+	
+	ip := []string{}
+	tempbi := ""
+	for index, bit := range bi {
+		tempbi += string(bit)
+		if (index+1)%8 == 0 {
+			intTemp,_ := Bi2Dec(tempbi)
+			ip = append(ip, strconv.Itoa(intTemp))
+			tempbi = ""
+		}
+	}
+
+	return  strings.Join(ip,"."),nil
+}
+
 func Ip2Int(ip string) (int, error) {
 	biIp,err := Ip2Bi(ip)
 	if err != nil {
@@ -220,4 +236,8 @@ func Ip2Int(ip string) (int, error) {
 }
 
 
+// func Int2Ip(num int) (string, error){
+// 	biNum,_ := Dec2Bi(num)
+
+// }
 
