@@ -289,3 +289,27 @@ func TestEndIp(t *testing.T) {
 		})
 	}
 }
+
+func TestInt2Ip(t *testing.T) {
+	tests := []struct {
+		num       int
+		expected string
+		wantErr  bool
+	}{
+		{5, "0.0.0.5", false},
+		{0, "0.0.0.0", false},
+		{1, "0.0.0.1", false},
+		{3232235777, "192.168.1.1", false},
+		{4294967295, "255.255.255.255", false},
+	}
+
+	for _, test := range tests {
+		got, err := Int2Ip(test.num)
+		if (err != nil) != test.wantErr {
+			t.Errorf("Int2Ip(%d) error = %v; wantErr %v", test.num, err, test.wantErr)
+		}
+		if !test.wantErr && got != test.expected {
+			t.Errorf("Int2Ip(%d) = %s; expected %s", test.num, got, test.expected)
+		}
+	}
+}

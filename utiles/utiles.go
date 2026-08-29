@@ -211,6 +211,10 @@ func Ip2Bi(ip string) (string, error) {
 }
 
 func bi2Ip(bi string) (string, error) {
+
+	if len(bi) != 32 {
+		return  "", errors.New("not proper format, it sould be 32 bit")
+	}
 	
 	ip := []string{}
 	tempbi := ""
@@ -236,8 +240,12 @@ func Ip2Int(ip string) (int, error) {
 }
 
 
-// func Int2Ip(num int) (string, error){
-// 	biNum,_ := Dec2Bi(num)
-
-// }
+func Int2Ip(num int) (string, error){
+	biNum,_ := Dec2Bi(num)
+	for len(biNum) < 32{
+		biNum = "0"+biNum
+	}
+	ip,_ := bi2Ip(biNum)
+	return  ip,nil
+}
 
