@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
-	"port-scaner/send"
+	"port-scaner/scaner"
+	"port-scaner/extractor"
+	"sync"
 )
 
 func main() {
@@ -20,5 +22,17 @@ func main() {
 		}
 	}()
 
-	fmt.Println(result)
+
+	
+	wg.Add(1)
+	go func(){
+		defer wg.Done()
+		err := scaner.Scan("tcp",443,ips)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}()
+	
+
+	wg.Wait()
 }
