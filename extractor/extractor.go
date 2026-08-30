@@ -5,22 +5,18 @@ import (
 	"strings"
 )
 
-func ListHosts(target string) ([]string, error) {
+func ListHosts(target string, ips chan<- string)  error {
+	defer close(ips)
 	contain := strings.Contains(target, "/")
 	if contain {
-		lst, err := extractSubHosts(target)
-		if err != nil {
-			return []string{}, err
-		} else {
-			return lst, nil
-		}
+		return  extractSubHosts(target, ips)
 	} else {
-		return []string{target}, nil
+		ips <- target
+		return  nil
 	}
 }
 
-func extractSubHosts(target string) ([]string, error) {
-	hostList := []string{}
+func extractSubHosts(target string, ips chan<- string) error {
 	baseIp, _ := utiles.BaseIp(target)
 	endIp, _ := utiles.EndIp(target)
 	intEndIp, _ := utiles.Ip2Int(endIp)
@@ -28,8 +24,8 @@ func extractSubHosts(target string) ([]string, error) {
 	intIp++
 	for intIp != intEndIp {
 		ip, _ := utiles.Int2Ip(intIp)
-		hostList = append(hostList, ip)
+		ips <- ip
 		intIp++
 	}
-	return hostList, nil
+	return nil
 }
