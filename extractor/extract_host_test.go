@@ -1,16 +1,34 @@
 package extractor
 
 import (
-	"fmt"
+	"slices"
 	"testing"
 )
 
 func TestExtractor(t *testing.T) {
-	got, err := ListHosts("127.0.0.1/23")
-	if err != nil {
-		fmt.Println(err)
+	testChann := make(chan string)
+	go func ()  {
+		err := ListHosts("127.0.0.0/30",testChann)
+		if err != nil {
+			t.Error(err)
+		}
+	}()
+
+	want := []string{
+		"127.0.0.1",
+		"127.0.0.2",
 	}
-	fmt.Print(got)
+
+	got := []string{}
+	for ip := range testChann{// this will block until listhosts close the channel
+		got = append(got, ip)
+	}
+
+	if !slices.Equal(want, got){
+		t.Error("error in list host")
+	} 
+
+
 }
 
 func TestExtractSubHosts(t *testing.T) {
@@ -68,35 +86,24 @@ func TestExtractSubHosts(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := extractSubHosts(tt.ip)
+			ips := make(chan string)
 
-			if err != nil {
-				t.Fatalf(
-					"extractSubHosts(%q) returned unexpected error: %v",
-					tt.ip,
-					err,
-				)
-			}
-
-			if len(got) != len(tt.want) {
-				t.Fatalf(
-					"extractSubHosts(%q) returned %d hosts, want %d",
-					tt.ip,
-					len(got),
-					len(tt.want),
-				)
-			}
-
-			for i := range tt.want {
-				if got[i] != tt.want[i] {
-					t.Errorf(
-						"extractSubHosts(%q)[%d] = %q, want %q",
-						tt.ip,
-						i,
-						got[i],
-						tt.want[i],
-					)
+			go func() {
+				err := extractSubHosts(tt.ip, ips)
+				if err != nil {
+					t.Error(err)
 				}
+				close(ips)
+			}()
+
+			var got []string
+
+			for ip := range ips {
+				got = append(got, ip)
+			}
+
+			if !slices.Equal(got, tt.want) {
+				t.Errorf("got %v, want %v", got, tt.want)
 			}
 		})
 	}

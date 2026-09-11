@@ -5,14 +5,14 @@ import (
 	"strings"
 )
 
-func ListHosts(target string, ips chan<- string)  error {
+func ListHosts(target string, ips chan<- string) error {
 	defer close(ips)
 	contain := strings.Contains(target, "/")
 	if contain {
-		return  extractSubHosts(target, ips)
+		return extractSubHosts(target, ips)
 	} else {
 		ips <- target
-		return  nil
+		return nil
 	}
 }
 
