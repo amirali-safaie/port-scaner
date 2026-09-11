@@ -3,20 +3,22 @@ package scaner
 import (
 	"fmt"
 	"net"
+	"sync"
 	"time"
 )
 
-func Scan(TU string, port int, ips <-chan string) error {
-
+func Scan(TU string, ports []int, ips <-chan string) error {
+	var wg sync.WaitGroup
 	for ip := range ips {
-		err := estConnection(TU, ip, port)
-		if err != nil {
-			fmt.Printf("%s:%d -> closed/unreachable\n", ip, port)
-			fmt.Println(err)
+		for _, port := range ports {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				estConnection(TU, ip, port)
+			}()
 		}
-		fmt.Println(".......................................")
 	}
-
+	wg.Wait()
 	return nil
 }
 

@@ -11,7 +11,7 @@ import (
 func main() {
 	var target string
 	var ports []int
-	target, ports =utiles.GetInput()
+	target, ports = utiles.GetInput()
 
 	ips := make(chan string)
 	var wg sync.WaitGroup
@@ -28,7 +28,7 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		err := scaner.Scan("tcp", 631, ips)
+		err := scaner.Scan("tcp", ports, ips)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -36,5 +36,3 @@ func main() {
 
 	wg.Wait()
 }
-
-

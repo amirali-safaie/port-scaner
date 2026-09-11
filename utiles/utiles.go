@@ -2,10 +2,10 @@ package utiles
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
-	"fmt"
 )
 
 func Dec2Bi(num int) (string, error) {
@@ -236,7 +236,7 @@ func Int2Ip(num int) (string, error) {
 	return ip, nil
 }
 
-// GetInput will get input and parse it into proper format 
+// GetInput will get input and parse it into proper format
 func GetInput() (string, []int) {
 	var target string
 	var inputPort string
