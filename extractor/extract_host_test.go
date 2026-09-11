@@ -7,8 +7,8 @@ import (
 
 func TestExtractor(t *testing.T) {
 	testChann := make(chan string)
-	go func ()  {
-		err := ListHosts("127.0.0.0/30",testChann)
+	go func() {
+		err := ListHosts("127.0.0.0/30", testChann)
 		if err != nil {
 			t.Error(err)
 		}
@@ -20,14 +20,13 @@ func TestExtractor(t *testing.T) {
 	}
 
 	got := []string{}
-	for ip := range testChann{// this will block until listhosts close the channel
+	for ip := range testChann { // this will block until listhosts close the channel
 		got = append(got, ip)
 	}
 
-	if !slices.Equal(want, got){
+	if !slices.Equal(want, got) {
 		t.Error("error in list host")
-	} 
-
+	}
 
 }
 
