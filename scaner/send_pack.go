@@ -9,15 +9,19 @@ import (
 
 func Scan(TU string, ports []int, ips <-chan string) error {
 	var wg sync.WaitGroup
+	jobs := make(chan ScanJob)
+	for i := 0;i < 20;i++{
+		wg.Add(1)
+		go scanWorker(TU, jobs, &wg)
+	}
+
 	for ip := range ips {
 		for _, port := range ports {
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				estConnection(TU, ip, port)
-			}()
+			jobs <- ScanJob{ip:ip,port: port}
 		}
 	}
+	
+	close(jobs)
 	wg.Wait()
 	return nil
 }
