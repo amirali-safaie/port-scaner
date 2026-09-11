@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"port-scaner/extractor"
 	"port-scaner/scaner"
+	"port-scaner/utiles"
 	"sync"
 )
 
 func main() {
 	var target string
-	fmt.Print("enter the tartget: ")
-	fmt.Scanln(&target)
+	var ports []int
+	target, ports =utiles.GetInput()
+
 	ips := make(chan string)
 	var wg sync.WaitGroup
 
@@ -34,3 +36,5 @@ func main() {
 
 	wg.Wait()
 }
+
+

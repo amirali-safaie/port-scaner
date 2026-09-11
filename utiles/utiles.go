@@ -5,6 +5,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"fmt"
 )
 
 func Dec2Bi(num int) (string, error) {
@@ -233,4 +234,28 @@ func Int2Ip(num int) (string, error) {
 	}
 	ip, _ := bi2Ip(biNum)
 	return ip, nil
+}
+
+// GetInput will get input and parse it into proper format 
+func GetInput() (string, []int) {
+	var target string
+	var inputPort string
+
+	fmt.Print("Enter the target: ")
+	fmt.Scanln(&target)
+
+	fmt.Print("Determine the port range (start-end): ")
+	fmt.Scanln(&inputPort)
+
+	parts := strings.Split(inputPort, "-")
+
+	start, _ := strconv.Atoi(parts[0])
+	end, _ := strconv.Atoi(parts[1])
+
+	var ports []int
+	for port := start; port <= end; port++ {
+		ports = append(ports, port)
+	}
+
+	return target, ports
 }
