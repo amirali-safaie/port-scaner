@@ -14,6 +14,8 @@ func main() {
 	target, ports = utiles.GetInput()
 
 	ips := make(chan string)
+	results := make(chan scaner.Result)
+
 	var wg sync.WaitGroup
 
 	wg.Add(1)
@@ -28,11 +30,19 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		err := scaner.Scan("tcp", ports, ips)
+		err := scaner.Scan("tcp", ports, ips, results)
 		if err != nil {
 			fmt.Println(err)
 		}
 	}()
+
+	// wg.Add(1)
+	// go func() {
+	// 	defer wg.Done()
+	// 	for result := range results {
+	// 		result.Print
+	// 	}
+	// }()
 
 	wg.Wait()
 }
