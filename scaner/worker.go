@@ -10,7 +10,7 @@ type ScanJob struct {
 func scanWorker(TU string, jobs <-chan ScanJob, wg *sync.WaitGroup) error {
 	defer wg.Done()
 	for job := range jobs {
-		estConnection(TU, job.ip, job.port)
+		result, err := estConnection(TU, job.ip, job.port)
 	}
 	return nil
 }

@@ -32,14 +32,17 @@ func Scan(TU string, ports []int, ips <-chan string) error {
 	return nil
 }
 
-func estConnection(TU string, ip string, port int) error {
+func estConnection(TU string, ip string, port int) (result, error) {
+	var result result
+	result.ip = ip
+	result.port = port
 	address := fmt.Sprintf("%s:%d", ip, port)
 	conn, err := net.DialTimeout(TU, address, time.Second*10)
 	if err != nil {
-		return err
+		result.status = 0
+		return result, err
 	}
-	fmt.Printf("IP %s on port : %d --> OPEN", ip, port)
-	fmt.Println()
+	result.status = 1
 	conn.Close()
-	return nil
+	return result, nil
 }
