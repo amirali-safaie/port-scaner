@@ -1,4 +1,4 @@
-.PHONY: run test build clean fmt vet
+.PHONY: run test build clean fmt vet check
 
 run:
 	go run .
@@ -18,3 +18,5 @@ fmt:
 
 vet:
 	go vet ./...
+
+check: fmt vet test
