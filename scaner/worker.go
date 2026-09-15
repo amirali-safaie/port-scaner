@@ -1,8 +1,8 @@
 package scaner
 
 import (
-	"fmt"
 	"net"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -25,7 +25,7 @@ func estConnection(TU string, ip string, port int) (Result, error) {
 	var result Result
 	result.IP = ip
 	result.PORT = port
-	address := fmt.Sprintf("%s:%d", ip, port)
+	address := net.JoinHostPort(ip, strconv.Itoa(port))
 	conn, err := net.DialTimeout(TU, address, time.Second*10)
 	if err != nil {
 		result.STATUS = 0
