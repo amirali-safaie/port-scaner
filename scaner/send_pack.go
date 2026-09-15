@@ -10,11 +10,11 @@ type Result struct {
 	STATUS int //0 is closed and 1 is open
 }
 
-func Scan(TU string, ports []int, ips <-chan string, results chan<- Result) error {
+func Scan(TU string, ports []int, ips <-chan string, results chan<- Result, workers int) error {
 	var wg sync.WaitGroup
 	jobs := make(chan ScanJob)
 
-	for i := 0; i < 20; i++ {
+	for i := 0; i < workers; i++ {
 		wg.Add(1)
 		go scanWorker(TU, jobs, &wg, results)
 	}

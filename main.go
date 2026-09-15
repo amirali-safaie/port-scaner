@@ -10,6 +10,12 @@ import (
 )
 
 func main() {
+	cfg, err := utiles.ReadConf("config.json")
+	if err != nil {
+		fmt.Println("config error:", err)
+		return
+	}
+
 	var target string
 	var ports []int
 	target, ports = utiles.GetInput()
@@ -31,7 +37,7 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		err := scaner.Scan("tcp", ports, ips, results)
+		err := scaner.Scan("tcp", ports, ips, results, cfg.WorkerNum)
 		if err != nil {
 			fmt.Println(err)
 		}
