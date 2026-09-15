@@ -16,7 +16,6 @@ jobs:
           go-version: '1.22'
 
       - run: go mod verify
+      - run: go fmt --check
       - run: make check
-      - run: make vet
-      - run: make test
       - run: make build
