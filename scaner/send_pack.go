@@ -5,15 +5,14 @@ import (
 )
 
 type Result struct {
-	ip     string
-	port   int
-	status int //0 is closed and 1 is open
+	IP     string
+	PORT   int
+	STATUS int //0 is closed and 1 is open
 }
 
 func Scan(TU string, ports []int, ips <-chan string, results chan<- Result) error {
 	var wg sync.WaitGroup
 	jobs := make(chan ScanJob)
-	defer close(jobs)
 
 	for i := 0; i < 20; i++ {
 		wg.Add(1)
@@ -26,6 +25,8 @@ func Scan(TU string, ports []int, ips <-chan string, results chan<- Result) erro
 		}
 	}
 
+	close(jobs)
 	wg.Wait()
+	close(results)
 	return nil
 }

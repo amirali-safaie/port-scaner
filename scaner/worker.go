@@ -23,15 +23,15 @@ func scanWorker(TU string, jobs <-chan ScanJob, wg *sync.WaitGroup, results chan
 
 func estConnection(TU string, ip string, port int) (Result, error) {
 	var result Result
-	result.ip = ip
-	result.port = port
+	result.IP = ip
+	result.PORT = port
 	address := fmt.Sprintf("%s:%d", ip, port)
 	conn, err := net.DialTimeout(TU, address, time.Second*10)
 	if err != nil {
-		result.status = 0
+		result.STATUS = 0
 		return result, err
 	}
-	result.status = 1
+	result.STATUS = 1
 	conn.Close()
 	return result, nil
 }

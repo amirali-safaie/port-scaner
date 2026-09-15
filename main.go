@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"port-scaner/extractor"
+	"port-scaner/presenter"
 	"port-scaner/scaner"
 	"port-scaner/utiles"
 	"sync"
@@ -36,13 +37,15 @@ func main() {
 		}
 	}()
 
-	// wg.Add(1)
-	// go func() {
-	// 	defer wg.Done()
-	// 	for result := range results {
-	// 		result.Print
-	// 	}
-	// }()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		var p presenter.Presenter
+		p = presenter.Terminal{}
+		for result := range results {
+			p.Present(result)
+		}
+	}()
 
 	wg.Wait()
 }
